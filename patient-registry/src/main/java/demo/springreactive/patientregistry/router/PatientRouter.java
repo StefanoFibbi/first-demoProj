@@ -1,17 +1,13 @@
 package demo.springreactive.patientregistry.router;
 
 import demo.springreactive.patientregistry.router.handler.PatientHandler;
+import demo.springreactive.patientregistry.router.util.DelayFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
-
-import static org.springframework.web.reactive.function.server.RequestPredicates.DELETE;
-import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
-import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
-import static org.springframework.web.reactive.function.server.RequestPredicates.PUT;
-import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Profile("func")
 @Configuration
@@ -21,13 +17,16 @@ public class PatientRouter {
 
 	@Bean
 	RouterFunction<ServerResponse> patientRoutes(PatientHandler handler) {
-		return route(GET(BASE_ROUTE), handler::findAll)
-				.andRoute(POST(BASE_ROUTE), handler::insertPatient)
-				.andRoute(DELETE(BASE_ROUTE), handler::deleteAllPatients)
+		return RouterFunctions.route()
+				.GET(BASE_ROUTE, handler::findAll)
+				.POST(BASE_ROUTE, handler::insertPatient)
+				.DELETE(BASE_ROUTE, handler::deleteAllPatients)
 
-				.andRoute(GET(ROUTE_PATIENT_ID), handler::findPatientById)
-				.andRoute(PUT(ROUTE_PATIENT_ID), handler::updatePatient)
-				.andRoute(DELETE(ROUTE_PATIENT_ID), handler::deletePatient)
-				;
+				.GET(ROUTE_PATIENT_ID, handler::findPatientById)
+				.PUT(ROUTE_PATIENT_ID, handler::updatePatient)
+				.DELETE(ROUTE_PATIENT_ID, handler::deletePatient)
+
+				.filter(new DelayFilter())
+				.build();
 	}
 }

@@ -1,15 +1,13 @@
 package demo.springreactive.patientregistry.router;
 
 import demo.springreactive.patientregistry.router.handler.ClinicalDocumentHandler;
+import demo.springreactive.patientregistry.router.util.DelayFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
-
-import static org.springframework.web.reactive.function.server.RequestPredicates.DELETE;
-import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
-import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Profile("func")
 @Configuration
@@ -20,11 +18,14 @@ public class ClinicalDocumentRouter {
 
 	@Bean
 	RouterFunction<ServerResponse> clinicalDocumentRoutes(ClinicalDocumentHandler handler) {
-		return route(GET(BASE_ROUTE), handler::findAll)
-				.andRoute(DELETE(BASE_ROUTE), handler::deleteAll)
+		return RouterFunctions.route()
+				.GET(BASE_ROUTE, handler::findAll)
+				.DELETE(BASE_ROUTE, handler::deleteAll)
 
-				.andRoute(GET(ROUTE_DOC_ID), handler::findById)
-				;
+				.GET(ROUTE_DOC_ID, handler::findById)
+
+				.filter(new DelayFilter())
+				.build();
 	}
 
 }
