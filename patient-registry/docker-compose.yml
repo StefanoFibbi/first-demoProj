@@ -1,0 +1,10 @@
+version: '3'
+services:
+  mongo:
+    image: bitnami/mongodb:latest
+    environment:
+      - MONGODB_USERNAME=test
+      - MONGODB_PASSWORD=test
+      - MONGODB_DATABASE=patient_registry_db
+    ports:
+      - 27018:27017
