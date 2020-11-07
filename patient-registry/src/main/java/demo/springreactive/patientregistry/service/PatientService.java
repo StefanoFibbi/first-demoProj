@@ -38,10 +38,10 @@ public class PatientService {
 	}
 
 	@SneakyThrows
-	public Mono<Patient> update(String id, String name, String email) {
+	public Mono<Patient> update(String id, String firstName, String lastName) {
 		return this.repository
 				.findById(id)
-				.map(p -> new Patient(p.getId(), name, email))
+				.map(p -> new Patient(p.getId(), firstName, lastName))
 				.flatMap(this.repository::save);
 	}
 
@@ -55,12 +55,17 @@ public class PatientService {
 		return this.repository.deleteAll();
 	}
 
-	public Mono<Patient> create(String name, String email) {
+	public Mono<Patient> create(String fullName) {
+		String[] nameSegments = fullName.split(" ");
+		return this.create(nameSegments[0], nameSegments[1]);
+	}
+
+	public Mono<Patient> create(String firstName, String lastName) {
 		return this.repository
 				.save(new Patient(
 						"PAT_" + this.createdPatientCount.incrementAndGet(),
-						name,
-						email
+						firstName,
+						lastName
 				))
 				.doOnSuccess(patient -> this.eventPublisher.publishEvent(new PatientCreatedEvent(patient)));
 	}

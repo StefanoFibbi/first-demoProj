@@ -4,7 +4,6 @@ import demo.springreactive.patientregistry.model.Patient;
 import demo.springreactive.patientregistry.service.PatientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -16,7 +15,6 @@ import static demo.springreactive.patientregistry.router.util.RequestUtil.id;
 
 @Slf4j
 @Component
-@Profile("func")
 public class PatientHandler {
 
 	PatientService patientService;
@@ -43,7 +41,7 @@ public class PatientHandler {
 		log.info("{}", request);
 		Mono<Patient> patientMono = request
 				.bodyToMono(Patient.class)
-				.flatMap(patient -> this.patientService.create(patient.getFullName(), patient.getEmail()));
+				.flatMap(patient -> this.patientService.create(patient.getFirstName(), patient.getLastName()));
 
 		return this.buildDefaultResponse(patientMono);
 	}
@@ -63,7 +61,7 @@ public class PatientHandler {
 		String patientId = id(request);
 		Mono<Patient> updatedPat = request
 				.bodyToMono(Patient.class)
-				.flatMap(patient -> this.patientService.update(patientId, patient.getFullName(), patient.getEmail()));
+				.flatMap(patient -> this.patientService.update(patientId, patient.getFirstName(), patient.getLastName()));
 
 		return this.buildDefaultResponse(updatedPat);
 	}

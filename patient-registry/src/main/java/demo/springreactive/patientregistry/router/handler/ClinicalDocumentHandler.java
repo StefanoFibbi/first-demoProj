@@ -4,7 +4,6 @@ import demo.springreactive.patientregistry.model.Patient;
 import demo.springreactive.patientregistry.service.ClinicalDocumentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -15,7 +14,6 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @Component
-@Profile("func")
 public class ClinicalDocumentHandler {
 
 	ClinicalDocumentService documentService;
