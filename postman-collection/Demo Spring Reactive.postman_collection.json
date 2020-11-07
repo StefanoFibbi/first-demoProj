@@ -1,0 +1,364 @@
+{
+	"info": {
+		"_postman_id": "38ca454e-b056-446a-b756-1cffc5706add",
+		"name": "Demo Spring Reactive",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "PatientRegistry",
+			"item": [
+				{
+					"name": "Patient",
+					"item": [
+						{
+							"name": "All Patients",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9000/v1/patients",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"v1",
+										"patients"
+									],
+									"query": [
+										{
+											"key": "delay",
+											"value": "5",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Retrieve Patient by Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9000/v1/patients/PAT_1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"v1",
+										"patients",
+										"PAT_1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Patient by Id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"firstName\": \"Johnny\",\r\n    \"lastName\": \"Stecchino\",\r\n    \"email\": \"john@stecco.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9000/v1/patients/PAT_1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"v1",
+										"patients",
+										"PAT_1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Patient",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"firstName\": \"Barba\",\r\n    \"lastName\": \"Blu\",\r\n    \"email\": \"barba@email.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9000/v1/patients",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"v1",
+										"patients"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Patient by Id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9000/v1/patients/PAT_2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"v1",
+										"patients",
+										"PAT_2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete all Patients",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9000/v1/patients",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"v1",
+										"patients"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Clinical Documents",
+					"item": [
+						{
+							"name": "All Clinical Documents",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9000/v1/clinical-docs",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"v1",
+										"clinical-docs"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "All Documents by Patient Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9000/v1/clinical-docs/?patient-id=PAT_1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"v1",
+										"clinical-docs",
+										""
+									],
+									"query": [
+										{
+											"key": "patient-id",
+											"value": "PAT_1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete All Clinical Documents",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9000/v1/clinical-docs",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"v1",
+										"clinical-docs"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Patient Contact Info",
+					"item": [
+						{
+							"name": "All contact info",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9000/v1/contact-info",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"v1",
+										"contact-info"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "All patients' contact info",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9000/v1/contact-info?patient-id=PAT_1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"v1",
+										"contact-info"
+									],
+									"query": [
+										{
+											"key": "patient-id",
+											"value": "PAT_1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete all contacts",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9000/v1/contact-info",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"v1",
+										"contact-info"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "PatientConsumerApp",
+			"item": [
+				{
+					"name": "All Patients - Classic",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9010/v1/patients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9010",
+							"path": [
+								"v1",
+								"patients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All Patients - Reactive",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9020/v1/patients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9020",
+							"path": [
+								"v1",
+								"patients"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
