@@ -6,4 +6,5 @@ import lombok.Data;
 public class PatientRegistryEndpoint {
 	private String allPatients;
 	private String allPatientDocuments;
+	private String allPatientContacts;
 }

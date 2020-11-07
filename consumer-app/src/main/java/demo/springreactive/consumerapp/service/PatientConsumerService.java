@@ -6,6 +6,7 @@ import java.util.List;
 import demo.springreactive.consumerapp.config.PatientRegistryConfiguration;
 import demo.springreactive.consumerapp.model.PatientDTO;
 import demo.springreactive.consumerapp.model.patientregistry.ClinicalDocument;
+import demo.springreactive.consumerapp.model.patientregistry.ContactInfo;
 import demo.springreactive.consumerapp.model.patientregistry.Patient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,15 @@ public class PatientConsumerService {
 							ClinicalDocument[].class,
 							patient.getId())
 			);
-			patientDTOList.add(new PatientDTO(patient, documents));
+
+			List<ContactInfo> contacts = CollectionUtils.arrayToList(
+					this.restTemplate.getForObject(
+							this.registryConfig.getEndpoint().getAllPatientContacts(),
+							ContactInfo[].class,
+							patient.getId()
+					));
+
+			patientDTOList.add(new PatientDTO(patient, documents, contacts.stream().findFirst().orElse(null)));
 		});
 
 		return patientDTOList;

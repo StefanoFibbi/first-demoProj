@@ -12,5 +12,4 @@ public class ClinicalDocument {
 	private String patientId;
 	private String title;
 	private String doc;
-
 }
