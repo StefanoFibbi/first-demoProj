@@ -9,24 +9,24 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-@Profile("func")
-@Configuration
-public class PatientRouter {
-	private static final String BASE_ROUTE = "/v1/patients";
-	private static final String ROUTE_PATIENT_ID = BASE_ROUTE + "/{id}";
+	@Profile("func")
+	@Configuration
+	public class PatientRouter {
+		private static final String BASE_ROUTE = "/v1/patients";
+		private static final String ROUTE_PATIENT_ID = BASE_ROUTE + "/{id}";
 
-	@Bean
-	RouterFunction<ServerResponse> patientRoutes(PatientHandler handler) {
-		return RouterFunctions.route()
-				.GET(BASE_ROUTE, handler::findAll)
-				.POST(BASE_ROUTE, handler::insertPatient)
-				.DELETE(BASE_ROUTE, handler::deleteAllPatients)
+		@Bean
+		RouterFunction<ServerResponse> patientRoutes(PatientHandler handler) {
+			return RouterFunctions.route()
+					.GET(BASE_ROUTE, handler::findAll)
+					.POST(BASE_ROUTE, handler::insertPatient)
+					.DELETE(BASE_ROUTE, handler::deleteAllPatients)
 
-				.GET(ROUTE_PATIENT_ID, handler::findPatientById)
-				.PUT(ROUTE_PATIENT_ID, handler::updatePatient)
-				.DELETE(ROUTE_PATIENT_ID, handler::deletePatient)
+					.GET(ROUTE_PATIENT_ID, handler::findPatientById)
+					.PUT(ROUTE_PATIENT_ID, handler::updatePatient)
+					.DELETE(ROUTE_PATIENT_ID, handler::deletePatient)
 
-				.filter(new DelayFilter())
-				.build();
+					.filter(new DelayFilter())
+					.build();
+		}
 	}
-}

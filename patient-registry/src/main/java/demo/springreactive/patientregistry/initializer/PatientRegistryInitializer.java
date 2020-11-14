@@ -1,8 +1,6 @@
 package demo.springreactive.patientregistry.initializer;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import demo.springreactive.patientregistry.model.ClinicalDocument;
@@ -44,7 +42,7 @@ public class PatientRegistryInitializer implements ApplicationListener<Applicati
 						.flatMap(this.patientService::create)
 				)
 				.doOnNext(patient -> log.info("Created patient: {}", patient))
-				.flatMap(patient -> {
+				.flatMapSequential(patient -> {
 					Mono<List<ClinicalDocument>> docsMono = Flux.just("Blood report", "Test exam")
 							.flatMap(title -> this.documentService.create(patient.getId(), title))
 							.doOnNext(doc -> log.info("Created document: {}", doc))
@@ -58,14 +56,11 @@ public class PatientRegistryInitializer implements ApplicationListener<Applicati
 									patient.getFirstName() + patient.getLastName() + " street")
 							.doOnNext(info -> log.info("Created contact info: {}", info));
 
-					return Mono.zip(docsMono, contactMono, (docs, contacts) -> {
-						Map<String, Object> map = new LinkedHashMap<>();
-						map.put("docs", docs);
-						map.put("contacts", contacts);
-						return map;
-					});
+					return Mono.zip(docsMono, contactMono, (docs, contacts) -> patient);
 				})
 				.blockLast();
+
+		log.info("Initialization completed");
 	}
 
 	private String buildEmailByName(String firstName, String lastName) {
