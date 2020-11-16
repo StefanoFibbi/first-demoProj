@@ -1,8 +1,6 @@
 package demo.springreactive.consumerapp.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import demo.springreactive.consumerapp.config.PatientRegistryConfiguration;
 import demo.springreactive.consumerapp.model.PatientDTO;
@@ -49,19 +47,11 @@ public class ReactivePatientConsumerService {
 									.bodyToFlux(ContactInfo.class)
 									.collectList();
 
-					return Mono.zip(docsMono, contactsMono, (docs, contacts) -> {
-						Map<String, Object> map = new HashMap<>();
-						map.put("pat", patient);
-						map.put("docs", docs);
-						map.put("cont", contacts.stream().findFirst().orElse(null));
-						return map;
-					});
-				})
-				.map(stringObjectMap ->
-						new PatientDTO(
-								(Patient) stringObjectMap.get("pat"),
-								(List<ClinicalDocument>) stringObjectMap.get("docs"),
-								(ContactInfo) stringObjectMap.get("cont"))
-				);
+					return Mono.zip(docsMono, contactsMono, (docs, contacts) ->
+							new PatientDTO(patient, docs, contacts
+									.stream()
+									.findFirst()
+									.orElse(null)));
+				});
 	}
 }
