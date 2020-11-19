@@ -1,5 +1,6 @@
 package demo.springreactive.consumerapp;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,6 +36,26 @@ class SpringMvcVsWebFluxPerformanceTests {
 
 			System.out.println(Arrays.toString(patients));
 		}
+	}
+
+	@Test
+	void nParallelCallsWithClassicRestTemplate() {
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(this.config.getHost()));
+
+		List<Integer> callNums = new ArrayList<>();
+		for (int i = 0; i < 100; i++) callNums.add(i);
+
+		callNums
+				.parallelStream()
+				.forEach(i -> {
+					Patient[] patients = restTemplate.getForObject(
+							this.config.getEndpoint().getAllPatients(),
+							Patient[].class
+					);
+
+					System.out.println(Arrays.toString(patients));
+				});
 	}
 
 	@Test
