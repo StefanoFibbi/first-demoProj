@@ -8,12 +8,14 @@ import demo.springreactive.consumerapp.model.PatientDTO;
 import demo.springreactive.consumerapp.model.patientregistry.ClinicalDocument;
 import demo.springreactive.consumerapp.model.patientregistry.ContactInfo;
 import demo.springreactive.consumerapp.model.patientregistry.Patient;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
+@Slf4j
 @Service
 public class PatientConsumerService {
 
@@ -34,19 +36,23 @@ public class PatientConsumerService {
 				this.restTemplate.getForObject(this.registryConfig.getEndpoint().getAllPatients(), Patient[].class));
 
 		patientList.forEach(patient -> {
+			log.info("Request documents for patient {}", patient.getId());
 			List<ClinicalDocument> documents = CollectionUtils.arrayToList(
 					this.restTemplate.getForObject(
 							this.registryConfig.getEndpoint().getAllPatientDocuments(),
 							ClinicalDocument[].class,
 							patient.getId())
 			);
+			log.info("Documents of patient {}: {}", patient.getId(), documents);
 
+			log.info("Request contacts for patient {}", patient.getId());
 			List<ContactInfo> contacts = CollectionUtils.arrayToList(
 					this.restTemplate.getForObject(
 							this.registryConfig.getEndpoint().getAllPatientContacts(),
 							ContactInfo[].class,
 							patient.getId()
 					));
+			log.info("Contacts of patient {}: {}", patient.getId(), contacts);
 
 			patientDTOList.add(new PatientDTO(patient, documents, contacts.stream().findFirst().orElse(null)));
 		});
