@@ -8,6 +8,7 @@ import demo.springreactive.consumerapp.model.patientregistry.ClinicalDocument;
 import demo.springreactive.consumerapp.model.patientregistry.ContactInfo;
 import demo.springreactive.consumerapp.model.patientregistry.Patient;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -20,9 +21,9 @@ public class ReactivePatientConsumerService {
 	private final WebClient webClient;
 	private final PatientRegistryConfiguration registryConfig;
 
-	public ReactivePatientConsumerService(PatientRegistryConfiguration registryConfig) {
+	public ReactivePatientConsumerService(PatientRegistryConfiguration registryConfig, @Qualifier("patient-registry") WebClient webClient) {
 		this.registryConfig = registryConfig;
-		this.webClient = WebClient.create(registryConfig.getHost());
+		this.webClient = webClient;
 	}
 
 	public Flux<PatientDTO> getAllPatients() {
