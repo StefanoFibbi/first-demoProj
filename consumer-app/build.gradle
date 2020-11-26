@@ -32,9 +32,9 @@ dependencies {
     testCompile 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'io.projectreactor:reactor-test'
     // LOMBOK
 
+    testImplementation 'io.projectreactor:reactor-test'
     testCompile 'com.github.tomakehurst:wiremock:2.27.2'
 }
 

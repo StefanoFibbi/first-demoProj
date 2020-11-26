@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
@@ -26,17 +27,20 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 
-
+@ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 @Import({ReactivePatientConsumerService.class, PatientRegistryConfiguration.class})
-@PropertySource("classpath:application.properties")
+@PropertySource({"classpath:application.properties", "classpath:application-test.properties"})
 @EnableConfigurationProperties
 class ReactivePatientConsumerServiceUTests {
 
@@ -81,6 +85,47 @@ class ReactivePatientConsumerServiceUTests {
 					.findAny();
 			assertThat(optPatient).isPresent();
 		}
+	}
+
+	@Test
+	void testWithStepVerifier_checkCorrectListSize() {
+		Flux<PatientDTO> patients = this.service.getAllPatients();
+
+		StepVerifier
+				.create(patients)
+				.expectNextCount(PATIENT_NUM)
+				.verifyComplete();
+	}
+
+	@Test
+	void testWithStepVerifier_checkCorrectListElements() {
+		Flux<PatientDTO> patients = this.service.getAllPatients();
+
+		StepVerifier
+				.create(patients)
+				.expectNextMatches(p -> this.validatePatientById(p, "PAT_0"))
+				.expectNextMatches(p -> this.validatePatientById(p, "PAT_1"))
+				.expectNextMatches(p -> this.validatePatientById(p, "PAT_2"))
+				.expectNextMatches(p -> this.validatePatientById(p, "PAT_3"))
+				.expectNextMatches(p -> this.validatePatientById(p, "PAT_4"))
+				.expectComplete()
+				.verify();
+	}
+
+	private boolean validatePatientById(PatientDTO patient, String patientId) {
+		String firstNameSuffix = patient.getFirstName().split("-")[1];
+		String lastNameSuffix = patient.getLastName().split("-")[1];
+		boolean validPatientName = firstNameSuffix.equals(patientId) && lastNameSuffix.equals(patientId);
+
+		AtomicBoolean validPatientDocs = new AtomicBoolean(patient.getClinicalDocuments().size() == DOCS_PER_PATIENT);
+		patient.getClinicalDocuments().forEach(d -> {
+			String docTitleSuffix = d.getDocumentTitle().split("-")[1].trim();
+			validPatientDocs.set(validPatientDocs.get() && docTitleSuffix.equals(patientId));
+		});
+
+		boolean validPatientContacts = patient.getContacts().getEmail().contains(patientId);
+
+		return validPatientName && validPatientDocs.get() && validPatientContacts;
 	}
 
 	private void stubPatientList() {
@@ -128,7 +173,7 @@ class ReactivePatientConsumerServiceUTests {
 	private List<Patient> buildPatientsList(int patientsNum) {
 		List<Patient> patients = new ArrayList<>();
 		for (int i = 0; i < patientsNum; i++) {
-			patients.add(new Patient("PAT_" + i, "FirstName_" + i, "LastName_" + i));
+			patients.add(new Patient("PAT_" + i, "FirstName-PAT_" + i, "LastName-PAT_" + i));
 		}
 		return patients;
 	}
@@ -139,7 +184,7 @@ class ReactivePatientConsumerServiceUTests {
 			docs.add(new ClinicalDocument(
 					"DOC_" + docId,
 					patientId,
-					"Title",
+					"Title - " + patientId,
 					"Lorem ipsum"
 			));
 		}
