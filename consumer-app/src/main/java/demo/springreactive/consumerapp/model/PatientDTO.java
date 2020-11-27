@@ -2,6 +2,7 @@ package demo.springreactive.consumerapp.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -39,7 +40,10 @@ public class PatientDTO {
 		this(patient);
 
 		if (clinicalDocuments != null) {
-			clinicalDocuments.forEach(doc -> this.clinicalDocuments.add(new ClinicalDocumentDTO(doc)));
+			this.clinicalDocuments.addAll(clinicalDocuments
+					.stream()
+					.map(ClinicalDocumentDTO::new)
+					.collect(Collectors.toList()));
 		}
 	}
 

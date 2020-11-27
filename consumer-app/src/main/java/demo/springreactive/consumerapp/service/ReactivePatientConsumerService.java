@@ -44,20 +44,15 @@ public class ReactivePatientConsumerService {
 									.doOnNext(docList -> log.info("Documents of patient {}: {}", patient.getId(), docList));
 
 					log.info("Request contacts for patient {}", patient.getId());
-					Mono<List<ContactInfo>> contactsMono =
+					Mono<ContactInfo> contactsMono =
 							this.webClient
 									.get()
 									.uri(this.registryConfig.getEndpoint().getAllPatientContacts(), patient.getId())
 									.retrieve()
-									.bodyToFlux(ContactInfo.class)
-									.collectList()
+									.bodyToMono(ContactInfo.class)
 									.doOnNext(contacts -> log.info("Contacts of patient {}: {}", patient.getId(), contacts));
 
-					return Mono.zip(docsMono, contactsMono, (docs, contacts) ->
-							new PatientDTO(patient, docs, contacts
-									.stream()
-									.findFirst()
-									.orElse(null)));
+					return Mono.zip(docsMono, contactsMono, (docs, contacts) -> new PatientDTO(patient, docs, contacts));
 				});
 	}
 }

@@ -15,7 +15,6 @@ import demo.springreactive.consumerapp.model.patientregistry.ContactInfo;
 import demo.springreactive.consumerapp.model.patientregistry.Patient;
 import demo.springreactive.consumerapp.service.ReactivePatientConsumerService;
 import lombok.SneakyThrows;
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -164,7 +163,7 @@ class ReactivePatientConsumerServiceUTests {
 							.willReturn(aResponse()
 									.withStatus(HttpStatus.OK.value())
 									.withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-									.withBody(this.toResponseBody(Lists.newArrayList(contactInfo)))
+									.withBody(this.toResponseBody(contactInfo))
 							)
 			);
 		});

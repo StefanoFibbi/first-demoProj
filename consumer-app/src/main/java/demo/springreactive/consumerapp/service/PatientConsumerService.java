@@ -46,15 +46,14 @@ public class PatientConsumerService {
 			log.info("Documents of patient {}: {}", patient.getId(), documents);
 
 			log.info("Request contacts for patient {}", patient.getId());
-			List<ContactInfo> contacts = CollectionUtils.arrayToList(
-					this.restTemplate.getForObject(
-							this.registryConfig.getEndpoint().getAllPatientContacts(),
-							ContactInfo[].class,
-							patient.getId()
-					));
+			ContactInfo contacts = this.restTemplate.getForObject(
+					this.registryConfig.getEndpoint().getAllPatientContacts(),
+					ContactInfo.class,
+					patient.getId()
+			);
 			log.info("Contacts of patient {}: {}", patient.getId(), contacts);
 
-			patientDTOList.add(new PatientDTO(patient, documents, contacts.stream().findFirst().orElse(null)));
+			patientDTOList.add(new PatientDTO(patient, documents, contacts));
 		});
 
 		return patientDTOList;
