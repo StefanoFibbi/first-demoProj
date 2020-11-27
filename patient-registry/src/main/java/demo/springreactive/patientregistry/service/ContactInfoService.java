@@ -33,8 +33,8 @@ public class ContactInfoService {
 		return this.repository.findAll();
 	}
 
-	public Flux<ContactInfo> getAllByPatientId(String patientId) {
-		return this.repository.getAllByPatientId(patientId);
+	public Mono<ContactInfo> getAllByPatientId(String patientId) {
+		return this.repository.getAllByPatientId(patientId).single();
 	}
 
 	public Mono<ContactInfo> get(String id) {

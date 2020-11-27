@@ -1,5 +1,7 @@
 package demo.springreactive.patientregistry.router.handler;
 
+import java.util.NoSuchElementException;
+
 import demo.springreactive.patientregistry.model.ContactInfo;
 import demo.springreactive.patientregistry.service.ContactInfoService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +31,7 @@ public class ContactInfoHandler {
 				.body(request
 						.queryParam("patient-id")
 						.map(p -> this.contactInfoService.getAllByPatientId(p))
-						.orElse(this.contactInfoService.getAll()), ContactInfo.class);
+						.orElse(Mono.error(new NoSuchElementException("No patient found for the given patient-id"))), ContactInfo.class);
 	}
 
 	public Mono<ServerResponse> deleteAll(ServerRequest request) {
