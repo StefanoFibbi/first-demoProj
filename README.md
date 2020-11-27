@@ -13,7 +13,7 @@ There are some test classes with code samples:
   + **ReactivePatientConsumerServiceUTests**: contains some unit tests written using both `Assertions` (from assertj) and `StepVerifier` (from project reactor)
 
 # Project setup
-1. Run `docker-compose up` in the root folder of the `patient-registry` application. It should run a MongoDB docker image.
+1. Run `docker-compose up` in the root folder of the `patient-registry` application. It runs a MongoDB docker image.
 2. Run the `patient-registry` application. After the application startup, the MongoDB should contains some test data.
 3. Run the `consumer-app`:
     + Set `classic` as active profile to run the application using the classic **Spring MVC** stack
